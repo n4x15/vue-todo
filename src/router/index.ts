@@ -1,13 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '../scenes/HomePage.vue'
+import SignIn from '../scenes/SignIn.vue'
+import SignUp from '../scenes/SignUp.vue'
+import PrivateProvider from '../providers/PrivateProvider.vue'
+import Tasks from '../scenes/TasksPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomePage
+      component: SignIn
+    },
+    {
+      path: '/sign-up',
+      component: SignUp
+    },
+    {
+      path: '/private',
+      component: PrivateProvider,
+      children: [{ path: 'tasks', component: Tasks }]
     }
   ]
 })
