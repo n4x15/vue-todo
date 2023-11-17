@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'ArchitectsDaughter';
+  src:
+    local('ArchitectsDaughter'),
+    url('ArchitectsDaughter.ttf') format('truetype');
+
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-family: 'ArchitectsDaughter';
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+}
+
+input,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
