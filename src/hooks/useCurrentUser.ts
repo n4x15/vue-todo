@@ -1,4 +1,4 @@
-import { type CurrentUserContext } from '@/providers/types'
+import type { CurrentUserContext } from '@/types/user'
 import { inject } from 'vue'
 
 export function useCurrentUser() {

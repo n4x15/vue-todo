@@ -3,15 +3,19 @@ import { ref } from 'vue'
 import { useMutation } from '@tanstack/vue-query'
 import { createTaskMutation } from '@/api/mutations'
 import type { Task } from '@/types/task'
+import { TYPE, useToast } from 'vue-toastification'
 
 type TaskInputProps = {
   onCreated: (value: Task) => void
 }
 
+const toast = useToast()
+
 const { onCreated } = defineProps<TaskInputProps>()
 const { mutateAsync } = useMutation({
   mutationFn: createTaskMutation,
-  onSuccess: (data) => onCreated?.(data)
+  onSuccess: (data) => onCreated?.(data),
+  onError: () => toast('Something went wrong', { type: TYPE.ERROR })
 })
 
 const text = ref('')

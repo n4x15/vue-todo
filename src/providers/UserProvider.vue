@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { provide, watch, ref } from 'vue'
-import { type CurrentUserContext, type User } from './types'
 import { useQuery } from '@tanstack/vue-query'
 import { currentUserQuery } from '@/api/queries'
 import router from '@/router'
+import type { CurrentUserContext, User } from '@/types/user'
 
 const user = ref<User | null>(null)
 

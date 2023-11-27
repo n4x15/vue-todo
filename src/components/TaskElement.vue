@@ -24,8 +24,6 @@ type TaskElementProps = {
   onSubDrop?: (result: DragResult) => void
 }
 
-const props = defineProps<TaskElementProps>()
-
 const {
   task,
   isChild,
@@ -36,7 +34,7 @@ const {
   onSubDrop,
   onDeleteButtonClick,
   onTaskChange
-} = props
+} = defineProps<TaskElementProps>()
 
 const { isCompleted = false } = task
 const editableText = ref(task.text)

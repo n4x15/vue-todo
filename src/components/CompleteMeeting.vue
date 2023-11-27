@@ -1,32 +1,42 @@
 <script setup lang="ts">
 import { completeMeetingMutation } from '@/api/mutations'
 import BaseButton from './BaseButton.vue'
-import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { getCurrentMeeting } from '@/api/queries'
-import { computed } from 'vue'
+import { TYPE, useToast } from 'vue-toastification'
 
-const { data, isLoading, refetch } = useQuery({
+const toast = useToast()
+
+const { data, isLoading } = useQuery({
   queryKey: ['currentMeeting'],
   queryFn: getCurrentMeeting
 })
 
 const { mutateAsync } = useMutation({
   mutationKey: ['completeMeeting'],
-  mutationFn: completeMeetingMutation
+  mutationFn: completeMeetingMutation,
+  onError: () => toast('Something went wrong', { type: TYPE.ERROR })
 })
 
-const disabled = computed(() => data.value?.completedAt != null)
+const client = useQueryClient()
 
 const handleClick = async () => {
   try {
     await mutateAsync(data.value?.id ?? '')
-    refetch()
+    client.invalidateQueries({
+      queryKey: ['tasks']
+    })
+    client.invalidateQueries({
+      queryKey: ['currentMeeting']
+    })
+    await client.invalidateQueries({
+      queryKey: ['nextMeeting']
+    })
   } catch {
     return
   }
 }
 </script>
 <template>
-  <div v-if="isLoading">Loading</div>
-  <BaseButton v-else @click="handleClick" :disabled="disabled">Complete meeting</BaseButton>
+  <BaseButton :disabled="isLoading" @click="handleClick">Complete meeting</BaseButton>
 </template>

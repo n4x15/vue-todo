@@ -3,6 +3,9 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { getNextMeeting } from '@/api/queries'
 import { updateMeetingMutation } from '@/api/mutations'
 import { computed, ref } from 'vue'
+import { TYPE, useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const { data, isLoading, refetch } = useQuery({
   queryKey: ['nextMeeting'],
@@ -11,7 +14,8 @@ const { data, isLoading, refetch } = useQuery({
 
 const { mutateAsync } = useMutation({
   mutationKey: ['updateMeeting'],
-  mutationFn: updateMeetingMutation
+  mutationFn: updateMeetingMutation,
+  onError: () => toast('Something went wrong', { type: TYPE.ERROR })
 })
 
 const isEditable = ref(false)

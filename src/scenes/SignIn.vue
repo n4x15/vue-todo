@@ -5,16 +5,23 @@ import router from '@/router/index'
 import { useMutation } from '@tanstack/vue-query'
 import { signInMutation } from '@/api/mutations'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { TYPE, useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const handleSignUpClick = (): void => {
   router.push('/sign-up')
 }
+
 const { user, emit } = useCurrentUser()
 if (user?.value?.id != null) router.push('/private/tasks')
 
 const { mutateAsync } = useMutation({
   mutationFn: signInMutation,
   mutationKey: ['signIn'],
+  onError: () => {
+    toast('Invalid password', { type: TYPE.ERROR })
+  },
   onSuccess: (userData) => {
     if (userData == null) return
     emit(userData)

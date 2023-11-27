@@ -5,6 +5,9 @@ import router from '@/router/index'
 import { useMutation } from '@tanstack/vue-query'
 import { signUpMutation } from '@/api/mutations'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { TYPE, useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const { emit } = useCurrentUser()
 
@@ -15,6 +18,7 @@ const handleBackButtonClick = (): void => {
 const { mutateAsync } = useMutation({
   mutationFn: signUpMutation,
   mutationKey: ['signIn'],
+  onError: () => toast('Something went wrong', { type: TYPE.ERROR }),
   onSuccess: (userData) => {
     if (userData == null) return
     emit(userData)

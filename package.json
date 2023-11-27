@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@tanstack/vue-query": "^5.7.3",
+    "axios": "^1.6.2",
     "lodash": "^4.17.21",
     "react-dnd-html5-backend": "^16.0.1",
     "vue": "^3.3.4",

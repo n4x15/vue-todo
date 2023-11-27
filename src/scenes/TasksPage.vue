@@ -11,6 +11,7 @@ import TaskElement from '@/components/TaskElement.vue'
 import { useMutation } from '@tanstack/vue-query'
 import { deleteTaskMutation, updateTaskMutation, updateTasksOrderMutation } from '@/api/mutations'
 import { type Task } from '@/types/task'
+import { TYPE, useToast } from 'vue-toastification'
 
 export type DragItem = Task & {
   index: number
@@ -27,6 +28,8 @@ export type UpdateTaskInput = {
   isCompleted?: boolean
   comment?: string | null
 }
+
+const toast = useToast()
 
 const { data, isLoading } = useQuery({
   queryKey: ['tasks'],
@@ -46,13 +49,16 @@ watch(
 )
 
 const { mutateAsync: updateTask, isPending: isUpdating } = useMutation({
-  mutationFn: updateTaskMutation
+  mutationFn: updateTaskMutation,
+  onError: () => toast('Something went wrong', { type: TYPE.ERROR })
 })
 const { mutateAsync: deleteTask, isPending: isDeleting } = useMutation({
-  mutationFn: deleteTaskMutation
+  mutationFn: deleteTaskMutation,
+  onError: () => toast('Something went wrong', { type: TYPE.ERROR })
 })
 const { mutateAsync: updateOrdersMutation, isPending: isOrdering } = useMutation({
-  mutationFn: updateTasksOrderMutation
+  mutationFn: updateTasksOrderMutation,
+  onError: () => toast('Something went wrong', { type: TYPE.ERROR })
 })
 
 const updateOrders = async () => {
