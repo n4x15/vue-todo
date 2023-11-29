@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, unref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
 import TaskInput from '@/components/TaskInput.vue'
 import UserInfo from '@/components/UserInfo.vue'
@@ -168,7 +168,6 @@ const handleSubDrop = async (dragResult: DragResult) => {
 
 const handleTaskCreated = async (task: Task) => {
   tasks.value.splice(0, 0, task)
-  console.log(unref(tasks))
   await updateOrders()
 }
 

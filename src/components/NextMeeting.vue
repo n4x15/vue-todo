@@ -2,7 +2,7 @@
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { getNextMeeting } from '@/api/queries'
 import { updateMeetingMutation } from '@/api/mutations'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { TYPE, useToast } from 'vue-toastification'
 
 const toast = useToast()
@@ -18,19 +18,23 @@ const { mutateAsync } = useMutation({
   onError: () => toast('Something went wrong', { type: TYPE.ERROR })
 })
 
-const isEditable = ref(false)
+const date = computed(() =>
+  data.value == null ? '' : new Date(data.value.startsAt).toISOString().substring(0, 10)
+)
 
-const date = computed(() => (data.value == null ? new Date() : new Date(data.value.startsAt)))
+watch(date, (nextDate) => (nextDate.length > 0 ? (dateRef.value = nextDate) : undefined))
 const dateRef = ref(date.value)
 
-const handleEditClose = () => (isEditable.value = false)
-const handleEditOpen = () => (isEditable.value = true)
+const minDate = computed(() => {
+  const currentDate = new Date()
+  currentDate.setDate(currentDate.getDate() + 1)
+  return currentDate.toISOString().substring(0, 10)
+})
 
 const handleSave = async () => {
   try {
     await mutateAsync({ startsAt: dateRef.value, meetingId: data.value?.id ?? '' })
-    handleEditClose()
-    refetch()
+    await refetch()
   } catch {
     return
   }
@@ -43,13 +47,11 @@ const handleSave = async () => {
     <div>Next meeting is:</div>
     <input
       type="date"
-      v-if="isEditable"
       v-model="dateRef"
-      @blur="handleEditClose"
+      @blur="handleSave"
       v-on:keydown.enter="handleSave"
-      autofocus
+      :min="minDate"
     />
-    <div v-else @click="handleEditOpen">{{ date.toLocaleDateString() }}</div>
   </div>
 </template>
 
@@ -65,7 +67,11 @@ const handleSave = async () => {
 input {
   border: none;
   outline: none;
-  width: 300px;
+  width: 150px;
   padding: 0;
+}
+
+.meeting-date {
+  min-height: 30px;
 }
 </style>

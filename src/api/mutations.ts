@@ -60,7 +60,7 @@ export const updateTasksOrderMutation = async (input: UpdateOrderInput): Promise
   responseHandler(apiClient.put('tasks/order', { input }))
 
 type UpdateMeetingInput = {
-  startsAt?: Date
+  startsAt: string
   meetingId: string
 }
 
